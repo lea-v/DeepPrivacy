@@ -11,10 +11,12 @@ from deep_privacy.inference import utils as inference_utils
 
 class Anonymizer:
 
-    def __init__(self, face_threshold=.1, keypoint_threshold=.3, *args, **kwargs):
+    def __init__(self, face_threshold=.1, keypoint_threshold=.3, keypoint_batch_size=16,
+                *args, **kwargs):
         super().__init__()
         self.face_threshold = face_threshold
         self.keypoint_threshold = keypoint_threshold
+        self.keypoint_batch_size = keypoint_batch_size
         print(f"Anonymizer initialized. Keypoint threshold: {keypoint_threshold}" + \
               f"Face threshold: {face_threshold}")
 
@@ -39,7 +41,8 @@ class Anonymizer:
         im_bboxes, im_keypoints = detection_api.batch_detect_faces_with_keypoints(
             images, im_bboxes=im_bboxes,
             keypoint_threshold=self.keypoint_threshold,
-            face_threshold=self.face_threshold
+            face_threshold=self.face_threshold,
+            batch_size=self.keypoint_batch_size
         )
 
         anonymized_images = self.anonymize_images(images,
@@ -88,7 +91,7 @@ class Anonymizer:
                                 total=end_frame - start_frame))
         if with_keypoints:
             im_bboxes, im_keypoints = detection_api.batch_detect_faces_with_keypoints(
-                frames)
+                frames, batch_size=self.keypoint_batch_size)
             im_bboxes, im_keypoints = inference_utils.filter_image_bboxes(
                 im_bboxes, im_keypoints,
                 [im.shape for im in frames],

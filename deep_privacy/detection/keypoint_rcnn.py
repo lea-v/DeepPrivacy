@@ -23,9 +23,8 @@ def detect_keypoints(img, keypoint_threshold=.3):
     return keypoints.cpu().numpy()
 
 
-def batch_detect_keypoints(images, keypoint_threshold=.3):
+def batch_detect_keypoints(images, keypoint_threshold=.3, batch_size=16):
     images = [image_to_torch(im, cuda=False)[0] for im in images]
-    batch_size = 16
     keypoints = []
     scores = []
     if len(images) > 0:

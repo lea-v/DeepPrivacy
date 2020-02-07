@@ -37,12 +37,14 @@ def detect_faces_with_keypoints(img, face_threshold=0.5, keypoint_threshold=0.3)
     return face_bboxes, keypoints
 
 
-def batch_detect_faces_with_keypoints(images, face_threshold=.5, keypoint_threshold=.3, im_bboxes=None):
+def batch_detect_faces_with_keypoints(images, face_threshold=.5,
+                                      keypoint_threshold=.3, im_bboxes=None,
+                                      batch_size=16):
     if im_bboxes is None:
         im_bboxes = batch_detect_faces(images, face_threshold)
 
     keypoints = keypoint_rcnn.batch_detect_keypoints(
-        images, keypoint_threshold)
+        images, keypoint_threshold, batch_size=batch_size)
     for i in range(len(im_bboxes)):
         face_bboxes = im_bboxes[i]
         face_kps = keypoints[i][:, :7, :]

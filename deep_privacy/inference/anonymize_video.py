@@ -4,10 +4,12 @@ if __name__ == "__main__":
     generator, _, source_path, _, target_path, config = infer.read_args(
         [{"name": "anonymize_source", "default": False},
          {"name": "max_face_size", "default": 1.0},
-         {"name": "without_source", "default": False}
+         {"name": "without_source", "default": False},
+         {"name": "generator_batch_size", "default": 32}
         ],
     )
-    a = deep_privacy_anonymizer.DeepPrivacyAnonymizer(generator, 32,
+    a = deep_privacy_anonymizer.DeepPrivacyAnonymizer(generator,
+                                                      int(config.generator_batch_size),
                                                       use_static_z=True,
                                                       keypoint_threshold=.1,
                                                       face_threshold=.6,
